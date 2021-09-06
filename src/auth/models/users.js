@@ -1,15 +1,24 @@
-'use strict';
+"use strict";
 
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-const SECRET = process.env.SECRET || 'secretstring';
+const SECRET = process.env.SECRET || "secretstring";
 
 const userModel = (sequelize, DataTypes) => {
-  const model = sequelize.define('Users', {
-    username: { type: DataTypes.STRING, required: true, unique: true ,allowNull:false },
+  const model = sequelize.define("Users", {
+    username: {
+      type: DataTypes.STRING,
+      required: true,
+      unique: true,
+      allowNull: false,
+    },
     password: { type: DataTypes.STRING, required: true },
-    role: { type: DataTypes.ENUM('user', 'admin'), required: true, defaultValue: 'user'},
+    role: {
+      type: DataTypes.ENUM("user", "admin"),
+      required: true,
+      defaultValue: "user",
+    },
     token: {
       type: DataTypes.VIRTUAL,
       get() {
@@ -18,20 +27,20 @@ const userModel = (sequelize, DataTypes) => {
       set(tokenObj) {
         let token = jwt.sign(tokenObj, SECRET);
         return token;
-      }
+      },
     },
     capabilities: {
       type: DataTypes.VIRTUAL,
       get() {
         const acl = {
-          user: ['read'],
-        //   writer: ['read', 'create'],
-        //   editor: ['read', 'create', 'update'],
-          admin: ['read', 'create', 'update', 'delete']
+          user: ["read"],
+          //   writer: ['read', 'create'],
+          //   editor: ['read', 'create', 'update'],
+          admin: ["read", "create", "update", "delete"],
         };
         return acl[this.role];
-      }
-    }
+      },
+    },
   });
 
   model.beforeCreate(async (user) => {
@@ -42,22 +51,43 @@ const userModel = (sequelize, DataTypes) => {
   model.authenticateBasic = async function (username, password) {
     const user = await this.findOne({ where: { username } });
     const valid = await bcrypt.compare(password, user.password);
-    if (valid) { return user; }
-    throw new Error('Invalid User');
+    if (valid) {
+      return user;
+    }
+    throw new Error("Invalid User");
   };
 
   model.authenticateToken = async function (token) {
     try {
       const parsedToken = jwt.verify(token, SECRET);
-      const user = this.findOne({where: { username: parsedToken.username } });
-      if (user) { return user; }
+      const user = this.findOne({ where: { username: parsedToken.username } });
+      if (user) {
+        return user;
+      }
       throw new Error("User Not Found");
     } catch (e) {
-      throw new Error(e.message)
+      throw new Error(e.message);
     }
   };
 
+  model.deleteUser = async function (id) {
+    try {
+      await this.destroy({ where: { id: id } });
+      return "Account Deleted";
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+  model.updateUser = async function (id, data) {
+    try {
+      let currentRecord = await this.findOne({ where: { id } });
+      let hp = await bcrypt.hash(data.password, 10);
+      data.password = hp;
+      let updatedRecord = await currentRecord.update(data);
+      return updatedRecord;
+    } catch (error) {}
+  };
   return model;
-}
+};
 
 module.exports = userModel;
