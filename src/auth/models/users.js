@@ -7,9 +7,9 @@ const SECRET = process.env.SECRET || 'secretstring';
 
 const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define('Users', {
-    username: { type: DataTypes.STRING, required: true, unique: true ,allowNull:false },
+    username: { type: DataTypes.STRING, required: true, unique: true, allowNull: false },
     password: { type: DataTypes.STRING, required: true },
-    role: { type: DataTypes.ENUM('user', 'admin'), required: true, defaultValue: 'user'},
+    role: { type: DataTypes.ENUM('user', 'admin'), required: true, defaultValue: 'user' },
     token: {
       type: DataTypes.VIRTUAL,
       get() {
@@ -25,8 +25,8 @@ const userModel = (sequelize, DataTypes) => {
       get() {
         const acl = {
           user: ['read'],
-        //   writer: ['read', 'create'],
-        //   editor: ['read', 'create', 'update'],
+          //   writer: ['read', 'create'],
+          //   editor: ['read', 'create', 'update'],
           admin: ['read', 'create', 'update', 'delete']
         };
         return acl[this.role];
@@ -49,7 +49,7 @@ const userModel = (sequelize, DataTypes) => {
   model.authenticateToken = async function (token) {
     try {
       const parsedToken = jwt.verify(token, SECRET);
-      const user = this.findOne({where: { username: parsedToken.username } });
+      const user = this.findOne({ where: { username: parsedToken.username } });
       if (user) { return user; }
       throw new Error("User Not Found");
     } catch (e) {

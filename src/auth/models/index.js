@@ -17,8 +17,12 @@ const DATABASE_CONFIG = process.env.NODE_ENV === 'production' ? {
 
 const sequelize = new Sequelize(DATABASE_URL, DATABASE_CONFIG);
 
+const user = userModel(sequelize, DataTypes);
 const food = foodModel(sequelize, DataTypes);
 const admin = adminModel(sequelize, DataTypes);
+
+user.hasMany(food, { foreignKey: "userId", sourceKey: "id" });
+food.belongsTo(user, { foreignKey: "userId", targetKey: "id" });
 
 module.exports = {
   db: sequelize,

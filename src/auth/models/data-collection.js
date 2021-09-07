@@ -34,7 +34,13 @@ class DataCollection {
       let currentRecord = await this.model.findOne({ where: { id } });
       let updatedRecord = await currentRecord.update(data);
       return updatedRecord;
-    } catch (error) {}
+    } catch (error) {
+      console.error(
+        " can not update the record on ",
+        this.model.name,
+        ` where is id=${id}`
+      );
+    }
   }
 
   async delete(id) {
