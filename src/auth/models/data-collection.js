@@ -7,11 +7,13 @@ class DataCollection {
 
   async get(id) {
     try {
+      let record = null;
       if (id) {
-        return await this.model.findOne({ id });
+        record = await this.model.findAll({ where: { userId: id } });
       } else {
-        return await this.model.findAll({});
+        record = await this.model.findAll();
       }
+      return record;
     } catch (error) {
       console.error(
         "can not read the record/s on ",
