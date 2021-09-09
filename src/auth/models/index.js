@@ -5,7 +5,7 @@ const adminModel = require('./admin/adminSchema');
 const foodModel = require('./food/foodSchema');
 const clientModel = require('./client/clientSchema');
 const userModel = require('./users');
-const restaurantModel = require('./restaurant/restaurantSchema');
+const favModel = require('./favSchema/favModel');
 const Collection = require('./data-collection.js');
 
 
@@ -21,7 +21,7 @@ const DATABASE_CONFIG = process.env.NODE_ENV === 'production' ? {
 const sequelize = new Sequelize(DATABASE_URL, DATABASE_CONFIG);
 
 const client = clientModel(sequelize, DataTypes);
-const restaurant = restaurantModel(sequelize, DataTypes);
+const fav = favModel(sequelize, DataTypes);
 const user = userModel(sequelize, DataTypes);
 const food = foodModel(sequelize, DataTypes);
 const admin = adminModel(sequelize, DataTypes);
@@ -32,8 +32,11 @@ food.belongsTo(user, { foreignKey: "userId", targetKey: "id" });
 user.hasMany(client, { foreignKey: "userId", sourceKey: "id" });
 client.belongsTo(user, { foreignKey: "userId", targetKey: "id" });
 
-user.hasMany(restaurant, { foreignKey: "userId", sourceKey: "id" });
-restaurant.belongsTo(user, { foreignKey: "userId", targetKey: "id" });
+user.hasMany(fav, { foreignKey: "userId", sourceKey: "id" });
+fav.belongsTo(user, { foreignKey: "userId", targetKey: "id" });
+
+food.hasMany(fav, { foreignKey: "foodId", sourceKey: "id" });
+fav.belongsTo(food, { foreignKey: "foodId", targetKey: "id" });
 
 user.hasMany(admin, { foreignKey: "userId", sourceKey: "id" });
 admin.belongsTo(user, { foreignKey: "userId", targetKey: "id" });
@@ -46,6 +49,6 @@ module.exports = {
   admin: new Collection(admin),
   client: new Collection(client),
   user: new Collection(user),
-  restaurant: new Collection(restaurant),
+  fav: new Collection(fav),
   users: userModel(sequelize, DataTypes),
 };

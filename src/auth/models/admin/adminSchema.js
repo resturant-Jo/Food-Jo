@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const adminModel = (sequelize, DataTypes) => sequelize.define('admin', {
-  username: { type: DataTypes.STRING, required: true ,allowNull : false},
-  password: { type: DataTypes.STRING, required: true ,allowNull : false},
-  email: { type: DataTypes.STRING, required: true , allowNull : false},
-  image: { type: DataTypes.STRING, required: true , allowNull : false},
-  userId: { type: DataTypes.INTEGER },
-});
+const adminModel = (sequelize, DataTypes) => {
+  const model = sequelize.define("admin", {
+    support: { type: DataTypes.ARRAY(DataTypes.JSON) },
+    userId:{type: DataTypes.INTEGER }
+  });
+  return model;
+};
 
 module.exports = adminModel;

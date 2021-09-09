@@ -3,7 +3,7 @@
 const express = require('express');
 const dataModules = require('../models');
 const bearerAuth = require('../middleware/bearerAuth');
-const acl = require('../middleware/acl.js');
+// const acl = require('../middleware/acl.js');
 const router = express.Router();
 
 router.param('model', (req, res, next) => {
@@ -18,20 +18,32 @@ router.param('model', (req, res, next) => {
 
 router.get('/:model',bearerAuth, handleGetAll);
 router.get('/:model/:id',bearerAuth, handleGetOne);
-router.post('/:model',bearerAuth,acl('create'), handleCreate);
-router.put('/:model/:id',bearerAuth,acl('update'), handleUpdate);
-router.delete('/:model/:id',bearerAuth,acl('delete'), handleDelete);
+router.post('/:model',bearerAuth, handleCreate);
+router.put('/:model/:id',bearerAuth, handleUpdate);
+router.delete('/:model/:id',bearerAuth, handleDelete);
 
 async function handleGetAll(req, res) {
   let allRecords = await req.model.get();
-  res.status(200).json(allRecords);
+  console.log(dataModules.food);
+  let allFood= await Promise.all( allRecords.map( ele=>
+       dataModules.food.getfav(parseInt(ele.foodId))
+
+  ))
+  res.status(200).json(allFood);
 }
 
 async function handleGetOne(req, res) {
   const id = req.params.id;
-  let theRecord = await req.model.get(id)
-  res.status(200).json(theRecord);
+  let allRecords = await req.model.get(id);
+  console.log(dataModules.food);
+  let allFood= await Promise.all( allRecords.map( ele=>
+       dataModules.food.getfav(parseInt(ele.foodId))
+
+  ))
+  res.status(200).json(allFood);
 }
+
+
 
 async function handleCreate(req, res) {
   let obj = req.body;

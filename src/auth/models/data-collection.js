@@ -23,6 +23,24 @@ class DataCollection {
     }
   }
 
+  async getfav(id) {
+    try {
+      let record = null;
+      if (id) {
+        record = await this.model.findAll({ where: { id: id } });
+      } 
+      return record;
+    } catch (error) {
+      console.error(
+        "can not read the record/s on ",
+        this.model.name,
+        ` where id=${id}`
+      );
+    }
+  }
+
+  
+
   async create(record) {
     try {
       return await this.model.create(record);
