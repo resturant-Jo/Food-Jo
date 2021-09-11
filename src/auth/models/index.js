@@ -9,7 +9,7 @@ const favModel = require('./favSchema/favModel');
 const Collection = require('./data-collection.js');
 
 
-const DATABASE_URL = process.env.NODE_ENV == "test" ? "sqlite:memory" : process.env.DATABASE_URL || 'postgres://buessyxp:CfH3-kmgmqZMDtMVnDqJHS07QRs6io_W@hattie.db.elephantsql.com/buessyxp';
+const DATABASE_URL = process.env.NODE_ENV == "test" ? "sqlite:memory" : process.env.DATABASE_URL || 'postgres://qcdnkrcj:acDs3KhLbsnKYWDGtrO_VcJ8slutwZug@chunee.db.elephantsql.com/qcdnkrcj';
 
 const DATABASE_CONFIG = process.env.NODE_ENV === 'production' ? {
   dialectOptions: {
