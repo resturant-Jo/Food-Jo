@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const foodRoutes=require('./auth/routes/foodRoute');
-const clientRoutes=require('./auth/routes/clientRoute');
+const orderRoutes=require('./auth/routes/orderRoute');
 const favRoutes=require('./auth/routes/favRoute');
 // const adminRoutes=require('./auth/routes/restaurantRoute');
 
@@ -28,10 +28,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger);
 
 // Routes
-app.use(favRoutes);
 app.use(authRoutes);
+app.use('/v1',orderRoutes);
 app.use(foodRoutes);
-app.use(clientRoutes);
+app.use(favRoutes);
 // app.use(adminRoutes);
 // app.use('/api/v1', foodRoutes);
 

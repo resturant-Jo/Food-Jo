@@ -9,7 +9,7 @@ class DataCollection {
     try {
       let record = null;
       if (id) {
-        record = await this.model.findAll({ where: { userId: id } });
+        record = await this.model.findAll({ where: { id: id } });
       } else {
         record = await this.model.findAll();
       }
@@ -27,7 +27,7 @@ class DataCollection {
     try {
       let record = null;
       if (id) {
-        record = await this.model.findAll({ where: { id: id } });
+        record = await this.model.findOne({ where: { id } });
       } 
       return record;
     } catch (error) {
@@ -39,7 +39,6 @@ class DataCollection {
     }
   }
 
-  
 
   async create(record) {
     try {

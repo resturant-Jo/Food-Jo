@@ -3,7 +3,7 @@
 const express = require('express');
 const dataModules = require('../models');
 const bearerAuth = require('../middleware/bearerAuth');
-const acl = require('../middleware/acl.js');
+// const acl = require('../middleware/acl.js');
 const router = express.Router();
 
 router.param('model', (req, res, next) => {
@@ -18,20 +18,39 @@ router.param('model', (req, res, next) => {
 
 router.get('/:model',bearerAuth, handleGetAll);
 router.get('/:model/:id',bearerAuth, handleGetOne);
-router.post('/:model',bearerAuth,acl('create'), handleCreate);
-router.put('/:model/:id',bearerAuth,acl('update'), handleUpdate);
-router.delete('/:model/:id',bearerAuth,acl('delete'), handleDelete);
+router.post('/:model',bearerAuth, handleCreate);
+router.put('/:model/:id',bearerAuth, handleUpdate);
+router.delete('/:model/:id',bearerAuth, handleDelete);
 
 async function handleGetAll(req, res) {
-  let allRecords = await req.model.get();
-  res.status(200).json(allRecords);
+  const id = req.params.id;
+  let allRecords = await req.model.get(id);
+  console.log(dataModules.cart);
+  let price = 0;
+  let data;
+  let foodData;
+   let allItems= await Promise.all(allRecords.map( async(ele) => {
+    data = await dataModules.cart.getfav(parseInt(ele.cartId));
+    foodData = await dataModules.food.getfav(parseInt(ele.foodId));
+    
+    price += await foodData.price;
+    return foodData;
+  }))
+  res.status(200).json({allItems,price});
 }
 
 async function handleGetOne(req, res) {
   const id = req.params.id;
-  let theRecord = await req.model.get(id)
-  res.status(200).json(theRecord);
+  let allRecords = await req.model.get(id);
+  console.log(dataModules.cart);
+  let allcart= await Promise.all( allRecords.map( ele=>
+       dataModules.cart.getfav(ele.cartId)
+
+  ))
+  res.status(200).json(allcart);
 }
+
+
 
 async function handleCreate(req, res) {
   let obj = req.body;

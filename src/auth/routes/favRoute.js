@@ -23,13 +23,18 @@ router.put('/:model/:id',bearerAuth, handleUpdate);
 router.delete('/:model/:id',bearerAuth, handleDelete);
 
 async function handleGetAll(req, res) {
-  let allRecords = await req.model.get();
+  const id = req.params.id;
+  let allRecords = await req.model.get(id);
   console.log(dataModules.food);
-  let allFood= await Promise.all( allRecords.map( ele=>
-       dataModules.food.getfav(parseInt(ele.foodId))
-
-  ))
-  res.status(200).json(allFood);
+  let price = 0;
+  let data;
+   let allFood= await Promise.all(allRecords.map( async(ele) => {
+    data = await dataModules.food.getfav(parseInt(ele.foodId));
+    
+    price += await data.price;
+    return data;
+  }))
+  res.status(200).json({allFood,price});
 }
 
 async function handleGetOne(req, res) {
@@ -37,7 +42,7 @@ async function handleGetOne(req, res) {
   let allRecords = await req.model.get(id);
   console.log(dataModules.food);
   let allFood= await Promise.all( allRecords.map( ele=>
-       dataModules.food.getfav(parseInt(ele.foodId))
+       dataModules.food.getfav(ele.foodId)
 
   ))
   res.status(200).json(allFood);
