@@ -4,8 +4,10 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const v1Routes=require('./auth/routes/foodRoute');
-// const v2Routes=require('./routes/v2.js');
+const foodRoutes=require('./auth/routes/foodRoute');
+const orderRoutes=require('./auth/routes/orderRoute');
+const favRoutes=require('./auth/routes/favRoute');
+// const adminRoutes=require('./auth/routes/restaurantRoute');
 
 // Esoteric Resources
 const errorHandler = require('./error-handlers/500.js');
@@ -27,8 +29,12 @@ app.use(logger);
 
 // Routes
 app.use(authRoutes);
-app.use('/api/v1', v1Routes);
-// app.use('/api/v2', v2Routes);
+app.use('/v1',orderRoutes);
+app.use(foodRoutes);
+app.use(favRoutes);
+// app.use(adminRoutes);
+// app.use('/api/v1', foodRoutes);
+
 
 app.get('/',(req,res)=>{
   res.send('This is the home page for API');
