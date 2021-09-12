@@ -13,7 +13,7 @@ const userModel = (sequelize, DataTypes) => {
     email: { type: DataTypes.STRING, required: true, unique: true ,allowNull:false },
     gender: { type: DataTypes.ENUM('male','female'), required: true},
     age: { type: DataTypes.INTEGER, required: true,allowNull:false },
-    adress: { type: DataTypes.STRING, required: true, unique: true ,allowNull:false },
+    adress: { type: DataTypes.STRING, required: true,allowNull:false },
     profilePicture: {
       type: DataTypes.STRING,
       defaultValue:

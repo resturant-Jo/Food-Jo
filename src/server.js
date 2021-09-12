@@ -30,8 +30,8 @@ app.use(logger);
 // Routes
 app.use(authRoutes);
 app.use('/v1',orderRoutes);
+app.use('/v2',favRoutes);
 app.use(foodRoutes);
-app.use(favRoutes);
 // app.use(adminRoutes);
 // app.use('/api/v1', foodRoutes);
 
