@@ -55,7 +55,19 @@ async function handleGetOne(req, res) {
 async function handleCreate(req, res) {
   let obj = req.body;
   let newRecord = await req.model.create(obj);
-  res.status(201).json(newRecord);
+  let data;
+  let foodData; 
+  const id = req.params.id;
+  let allRecords = await req.model.get(id);
+   let allItems= await Promise.all(allRecords.map( async(ele) => {
+    data = await dataModules.cart.getfav(parseInt(ele.cartId));
+    foodData = await dataModules.food.getfav(parseInt(ele.foodId));
+    
+    
+    return foodData;
+  }))
+  
+  res.status(201).json(foodData);
 }
 
 async function handleUpdate(req, res) {

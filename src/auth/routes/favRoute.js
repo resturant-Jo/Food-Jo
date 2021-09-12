@@ -26,15 +26,13 @@ async function handleGetAll(req, res) {
   const id = req.params.id;
   let allRecords = await req.model.get(id);
   console.log(dataModules.food);
-  let price = 0;
   let data;
    let allFood= await Promise.all(allRecords.map( async(ele) => {
     data = await dataModules.food.getfav(parseInt(ele.foodId));
     
-    price += await data.price;
     return data;
   }))
-  res.status(200).json({allFood,price});
+  res.status(200).json({allFood});
 }
 
 async function handleGetOne(req, res) {

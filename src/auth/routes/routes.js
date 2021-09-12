@@ -55,8 +55,4 @@ authRouter.delete('/deleteAccount', bearerAuth, async (req, res, next) => {
   });
   
 
-// authRouter.get('/secret', bearerAuth, async (req, res, next) => {
-//   res.status(200).send('Welcome to the secret area')
-// });
-
 module.exports = authRouter;
