@@ -36,17 +36,23 @@ authRouter.get('/users', bearerAuth, permissions('delete'), async (req, res, nex
   res.status(200).json(list);
 });
 
-// authRouter.delete('/deleteAccount', bearerAuth, async (req, res, next) => {
-//     const id = req.userId
+authRouter.delete('/deleteAccount', bearerAuth, async (req, res, next) => {
+    const id = req.userId
   
-//     await users.destroy({ where: { id: id } })
+    await users.destroy({ where: { id: id } })
     
-//     res.send('Account Deleted');
+    res.send('Account Deleted');
   
-//   });
+  });
 
-// authRouter.get('/secret', bearerAuth, async (req, res, next) => {
-//   res.status(200).send('Welcome to the secret area')
-// });
+  authRouter.put("/updateaccount", bearerAuth, async (req, res) => {
+    const id = req.userId;
+    let userRecord = await users.findOne({ where: { id: id } });
+    const output = req.body;
+    output.token = userRecord.token;
+    const update = await userRecord.update(output);
+    res.send(update);
+  });
+  
 
 module.exports = authRouter;
