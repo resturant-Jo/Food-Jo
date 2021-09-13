@@ -7,11 +7,13 @@ class DataCollection {
 
   async get(id) {
     try {
+      let record = null;
       if (id) {
-        return await this.model.findOne({ id });
+        record = await this.model.findAll({ where: { id: id } });
       } else {
-        return await this.model.findAll({});
+        record = await this.model.findAll();
       }
+      return record;
     } catch (error) {
       console.error(
         "can not read the record/s on ",
@@ -20,6 +22,23 @@ class DataCollection {
       );
     }
   }
+
+  async getfav(id) {
+    try {
+      let record = null;
+      if (id) {
+        record = await this.model.findOne({ where: { id } });
+      } 
+      return record;
+    } catch (error) {
+      console.error(
+        "can not read the record/s on ",
+        this.model.name,
+        ` where id=${id}`
+      );
+    }
+  }
+
 
   async create(record) {
     try {
