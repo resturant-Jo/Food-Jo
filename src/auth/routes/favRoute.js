@@ -3,7 +3,7 @@
 const express = require('express');
 const dataModules = require('../models');
 const bearerAuth = require('../middleware/bearerAuth');
-// const acl = require('../middleware/acl.js');
+
 const router = express.Router();
 
 router.param('model', (req, res, next) => {
@@ -51,7 +51,17 @@ async function handleGetOne(req, res) {
 async function handleCreate(req, res) {
   let obj = req.body;
   let newRecord = await req.model.create(obj);
-  res.status(201).json(newRecord);
+  let data;
+  let foodData; 
+  const id = req.params.id;
+  let allRecords = await req.model.get(id);
+   let allItems= await Promise.all(allRecords.map( async(ele) => {
+    foodData = await dataModules.food.getfav(parseInt(ele.foodId));
+     
+    return foodData;
+  }))
+  
+  res.status(201).json(foodData);
 }
 
 async function handleUpdate(req, res) {

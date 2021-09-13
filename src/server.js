@@ -7,7 +7,7 @@ const morgan = require('morgan');
 const foodRoutes=require('./auth/routes/foodRoute');
 const orderRoutes=require('./auth/routes/orderRoute');
 const favRoutes=require('./auth/routes/favRoute');
-// const adminRoutes=require('./auth/routes/restaurantRoute');
+const cartRoutes=require('./auth/routes/cartRoute');
 
 // Esoteric Resources
 const errorHandler = require('./error-handlers/500.js');
@@ -29,11 +29,11 @@ app.use(logger);
 
 // Routes
 app.use(authRoutes);
-app.use('/v1',orderRoutes);
-app.use('/v2',favRoutes);
+app.use('/v1',favRoutes);
+app.use('/v2',cartRoutes);
+app.use('/v3',orderRoutes);
 app.use(foodRoutes);
-// app.use(adminRoutes);
-// app.use('/api/v1', foodRoutes);
+
 
 
 app.get('/',(req,res)=>{

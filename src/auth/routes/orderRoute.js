@@ -3,7 +3,7 @@
 const express = require('express');
 const dataModules = require('../models');
 const bearerAuth = require('../middleware/bearerAuth');
-// const acl = require('../middleware/acl.js');
+
 const router = express.Router();
 
 router.param('model', (req, res, next) => {
@@ -16,58 +16,71 @@ router.param('model', (req, res, next) => {
   }
 });
 
-router.get('/:model',bearerAuth, handleGetAll);
-router.get('/:model/:id',bearerAuth, handleGetOne);
-router.post('/:model',bearerAuth, handleCreate);
-router.put('/:model/:id',bearerAuth, handleUpdate);
-router.delete('/:model/:id',bearerAuth, handleDelete);
+router.get('/:model', bearerAuth, handleGetAll);
+router.get('/:model/:id', bearerAuth, handleGetOne);
+router.get('/:model/items/:id', bearerAuth,handleGetCartItems );
+router.post('/:model', bearerAuth, handleCreate);
+router.put('/:model/:id', bearerAuth, handleUpdate);
+router.delete('/:model/:id', bearerAuth, handleDelete);
 
 async function handleGetAll(req, res) {
-  const id = req.params.id;
-  let allRecords = await req.model.get(id);
-  console.log(dataModules.cart);
-  let price = 0;
-  let data;
-  let foodData;
-   let allItems= await Promise.all(allRecords.map( async(ele) => {
-    data = await dataModules.cart.getfav(parseInt(ele.cartId));
-    foodData = await dataModules.food.getfav(parseInt(ele.foodId));
-    
-    price += await foodData.price;
-    return foodData;
-  }))
-  res.status(200).json({allItems,price});
+  let allRecords = await req.model.get();
+  let order=[];
+await Promise.all(allRecords.map(async(ele)=>{
+    let orderData=[];
+    let totalPrice=0;
+    const orderItems=await dataModules.cartItems.getOrderByCartId(ele.id);
+    orderItems.forEach(Item=>{
+      orderData.push({
+        foodId: Item.dataValues.foodId,
+        qty: Item.dataValues.qty,
+        price: Item.dataValues.price
+                
+      })
+      totalPrice += Item.dataValues.qty * Item.dataValues.price
+
+    });
+    order.push({
+      cartId: ele.userId,
+      totalPrice,
+      orderData
+    })
+}))
+  res.status(200).json(order);
+
+  
 }
 
 async function handleGetOne(req, res) {
   const id = req.params.id;
-  let allRecords = await req.model.get(id);
+  let allRecords = await req.model.getItemsByCartId(id);
   console.log(dataModules.cart);
-  let allcart= await Promise.all( allRecords.map( ele=>
-       dataModules.cart.getfav(ele.cartId)
 
-  ))
-  res.status(200).json(allcart);
+  res.status(200).json(allRecords);
+}
+
+async function handleGetCartItems(req, res) {
+  const id = req.params.id;
+  let allRecords = await await dataModules.cartItems.getItemsByCartId(id);
+  res.status(200).json(allRecords);
 }
 
 
-
 async function handleCreate(req, res) {
-  let obj = req.body;
-  let newRecord = await req.model.create(obj);
-  let data;
-  let foodData; 
-  const id = req.params.id;
-  let allRecords = await req.model.get(id);
-   let allItems= await Promise.all(allRecords.map( async(ele) => {
-    data = await dataModules.cart.getfav(parseInt(ele.cartId));
-    foodData = await dataModules.food.getfav(parseInt(ele.foodId));
-    
-    
-    return foodData;
-  }))
-  
-  res.status(201).json(foodData);
+  let {cartId} = req.body;
+  const isCart = await dataModules.cart.getfav(cartId);
+  console.log(isCart.dataValues.status);
+  if(isCart.dataValues.status){
+    let order = await req.model.create({cartId});
+    await dataModules.cart.update(cartId, {status: false});
+    const cart = await dataModules.cartItems.getItemsByCartId(cartId);
+    const data = {
+      id: order.id,
+      cart
+    };
+    return res.status(201).json(data);
+  }
+  return res.status(404).json("No Cart found");
 }
 
 async function handleUpdate(req, res) {
@@ -79,9 +92,16 @@ async function handleUpdate(req, res) {
 
 async function handleDelete(req, res) {
   let id = req.params.id;
+  let {cartId} = req.body;
+  const isCart = await dataModules.cart.getfav(cartId);
+  console.log(isCart.dataValues.status);
+  if(!isCart.dataValues.status){
+    await dataModules.cart.update(cartId, {status: true});
+  }
   let deletedRecord = await req.model.delete(id);
   res.status(200).json(deletedRecord);
 }
+
 
 
 module.exports = router;

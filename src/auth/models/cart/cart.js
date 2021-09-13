@@ -1,8 +1,8 @@
 'use strict';
 
 const cartModel = (sequelize, DataTypes) => sequelize.define('cart', {
-  foodId: {type:DataTypes.INTEGER},
   userId: { type: DataTypes.INTEGER },
+  status: { type: DataTypes.BOOLEAN, defaultValue: true},
 
 });
 
