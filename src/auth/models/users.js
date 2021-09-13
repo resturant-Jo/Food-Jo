@@ -8,12 +8,12 @@ const SECRET = process.env.SECRET || 'secretstring';
 const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define('Users', {
     username: { type: DataTypes.STRING, required: true, unique: true ,allowNull:false },
-    firstname: { type: DataTypes.STRING, required: true ,allowNull:false },
-    lastname: { type: DataTypes.STRING, required: true ,allowNull:false },
-    email: { type: DataTypes.STRING, required: true, unique: true ,allowNull:false },
+    firstname: { type: DataTypes.STRING, required: true ,allowNull:true },
+    lastname: { type: DataTypes.STRING, required: true ,allowNull:true },
+    email: { type: DataTypes.STRING, required: true, unique: true ,allowNull:true },
     gender: { type: DataTypes.ENUM('male','female'), required: true},
-    age: { type: DataTypes.INTEGER, required: true,allowNull:false },
-    adress: { type: DataTypes.STRING, required: true,allowNull:false },
+    age: { type: DataTypes.INTEGER, required: true,allowNull:true },
+    adress: { type: DataTypes.STRING, required: true,allowNull:true },
     profilePicture: {
       type: DataTypes.STRING,
       defaultValue:

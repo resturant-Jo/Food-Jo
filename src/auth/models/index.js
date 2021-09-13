@@ -11,16 +11,16 @@ const restuarantModel = require('./restuarant/restuarant');
 const Collection = require('./data-collection.js');
 
 
-const DATABASE_URL = process.env.NODE_ENV == "test" ? "sqlite:memory" : process.env.DATABASE_URL || 'postgres://qcdnkrcj:acDs3KhLbsnKYWDGtrO_VcJ8slutwZug@chunee.db.elephantsql.com/qcdnkrcj';
+const DATABASE_URL = 'postgres://postgres@localhost:5432/foodjo2';
 
-const DATABASE_CONFIG = process.env.NODE_ENV === 'production' ? {
-  dialectOptions: {
-    ssl: true,
-    rejectUnauthorized: false,
-  }
-} : {}
-
-const sequelize = new Sequelize(DATABASE_URL, DATABASE_CONFIG);
+// const DATABASE_CONFIG = process.env.NODE_ENV === 'production' ? {
+//   dialectOptions: {
+//     ssl: true,
+//     rejectUnauthorized: false,
+//   }
+// } : {}
+// DATABASE_CONFIG
+const sequelize = new Sequelize(DATABASE_URL);
 
 const user = userModel(sequelize, DataTypes);
 const restuarant = restuarantModel(sequelize, DataTypes);

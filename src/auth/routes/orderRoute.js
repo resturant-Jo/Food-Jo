@@ -16,11 +16,14 @@ router.param('model', (req, res, next) => {
   }
 });
 
+
 router.get('/:model',bearerAuth, handleGetAll);
 router.get('/:model/:id',bearerAuth, handleGetOne);
 router.post('/:model',bearerAuth, handleCreate);
 router.put('/:model/:id',bearerAuth, handleUpdate);
 router.delete('/:model/:id',bearerAuth, handleDelete);
+
+
 
 async function handleGetAll(req, res) {
   const id = req.params.id;

@@ -17,7 +17,7 @@ let obj = {
 
 describe('Auth Tests', () => {
     let obj = {
-        username: 'no908',
+        username: 'ask83',
         password: 'osama1222'
     }
 
@@ -33,7 +33,7 @@ describe('Auth Tests', () => {
 
 
         const response = await request.post('/signin')
-            .auth('no908', 'osama1222')
+            .auth('ask83', 'osama1222')
         const userObject = response.body;
         expect(response.status).toBe(200);
         expect(userObject.user).toBeDefined();
@@ -53,7 +53,7 @@ describe('Auth Tests', () => {
 
     it(' ADMIN TEST ROUTE FOR GETTING USERS  ', async () => {
 
-        const response = await request.post('/signin').auth('no908', 'osama1222');
+        const response = await request.post('/signin').auth('ask83', 'osama1222');
 
 
         const token = response.body.token;
@@ -106,13 +106,13 @@ describe('WORKING ROUTE: product (authenticated API) routes', () => {
 
     it(' get product  ', async () => {
 
-        const response = await request.post('/signin').auth('no908', 'osama1222');
+        const response = await request.post('/signin').auth('ask83', 'osama1222');
 
 
         const token = response.body.token;
 
         const bearerResponse = await request
-            .get('/v2/order')
+            .get('/v1/order')
             .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toEqual(200);
@@ -120,13 +120,13 @@ describe('WORKING ROUTE: product (authenticated API) routes', () => {
 
     it(' post product  ', async () => {
 
-        const response = await request.post('/signin').auth('no908', 'osama1222');
+        const response = await request.post('/signin').auth('ask83', 'osama1222');
 
 
         const token = response.body.token;
 
         const bearerResponse = await request
-            .post('/v2/order')
+            .post('/v1/order')
             .send(obj)
             .set('Authorization', `Bearer ${token}`)
 
@@ -136,13 +136,13 @@ describe('WORKING ROUTE: product (authenticated API) routes', () => {
 
     it(' update product  ', async () => {
 
-        const response = await request.post('/signin').auth('no908', 'osama1222');
+        const response = await request.post('/signin').auth('ask83', 'osama1222');
 
 
         const token = response.body.token;
 
         const bearerResponse = await request
-            .put('/v2/order/1')
+            .put('/v1/order/1')
             .send(obj)
             .set('Authorization', `Bearer ${token}`)
 
@@ -152,13 +152,13 @@ describe('WORKING ROUTE: product (authenticated API) routes', () => {
 
     it(' delete product  ', async () => {
 
-        const response = await request.post('/signin').auth('no908', 'osama1222');
+        const response = await request.post('/signin').auth('ask83', 'osama1222');
 
 
         const token = response.body.token;
 
         const bearerResponse = await request
-            .delete('/v2/order/1')
+            .delete('/v1/order/1')
             .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toEqual(200);

@@ -9,6 +9,12 @@ const basicAuth = require('../middleware/basicAuth');
 const bearerAuth = require('../middleware/bearerAuth');
 const permissions = require('../middleware/acl.js');
 
+authRouter.get('/asd', notFound);
+
+function notFound(req, res){
+  res.status(404).send('Not Found')
+}
+
 authRouter.post('/signup', async (req, res, next) => {
   try {
     let userRecord = await users.create(req.body);
