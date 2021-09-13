@@ -16,7 +16,6 @@
     "supergoose": "^0.2.6",
     "supertest": "^6.1.5",
     "ejs": "^3.1.6",
-    "http": "0.0.1-security",
     "faker": "^5.5.3",
     "socket.io": "^4.1.3",
     "socket.io-client": "^4.1.3",
@@ -28,7 +27,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js ",
+    "start": "node queu-hup.js",
     "test": "jest --coverage"
   },
   "repository": {
