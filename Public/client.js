@@ -151,7 +151,7 @@ const obj ={
   socket.on('typing', data => {
       info.textContent = data.username + " : " + data.text
       
-      // setTimeout(() => { info.textContent = '' }, 5000)
+      setTimeout(() => { info.textContent = '' }, 5000)
   })
 
 

@@ -29,7 +29,7 @@ async function handleGetAll(req, res) {
 await Promise.all(allRecords.map(async(ele)=>{
     let orderData=[];
     let totalPrice=0;
-    const orderItems=await dataModules.cartItems.getOrderByCartId(ele.id);
+    const orderItems=await dataModules.cartItems.getItemsByCartId(ele.id);
     orderItems.forEach(Item=>{
       orderData.push({
         foodId: Item.dataValues.foodId,

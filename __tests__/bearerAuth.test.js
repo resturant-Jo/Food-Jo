@@ -2,12 +2,14 @@
 
 
 /// from starter code  
-
+// const supertest = require("supertest");
+// const { server } = require("../src/server.js");
+// const request = supertest(server);
 
 process.env.SECRET = "toes";
 
-require('@code-fellows/supergoose');
-const middleware = require('../src/auth/middleware/bearer');
+// require('@code-fellows/supergoose');
+const middleware = require('../src/auth/middleware/bearerAuth.js');
 const Users = require('../src/auth/models/users');
 const jwt = require('jsonwebtoken')
 

@@ -65,13 +65,6 @@ cartItems.belongsTo(cart, { foreignKey: "cartId", targetKey: "id" });
 // -------------------- END CART -----------------
 
 
-// cart.hasMany(order, { foreignKey: "cartId", sourceKey: "id" });
-// order.belongsTo(cart, { foreignKey: "cartId", targetKey: "id" });
-
-// ---------------------- END ORDER -----------------
-
-
-
 
 
 
