@@ -5,7 +5,7 @@
 
 
 const middleware = require('../src/auth/middleware/basicAuth');
-const Users = require('../src/auth/models/users');
+const { db, Users } = require('../src/auth/models/index.js');
 
 let users = {
   admin: { username: 'admin', password: 'password' },
@@ -14,6 +14,11 @@ let users = {
 // Pre-load our database with fake users
 beforeAll(async (done) => {
   await new Users(users.admin).save();
+  done();
+});
+
+afterAll(async (done) => {
+  await db.drop();
   done();
 });
 
