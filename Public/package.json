@@ -23,7 +23,6 @@
     "ws": "^7.4.6"
   },
   "name": "food-jo",
-  "description": "",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -40,5 +39,6 @@
   "bugs": {
     "url": "https://github.com/resturant-Jo/Food-Jo/issues"
   },
-  "homepage": "https://github.com/resturant-Jo/Food-Jo#readme"
+  "homepage": "https://github.com/resturant-Jo/Food-Jo#readme",
+  "description": ""
 }
