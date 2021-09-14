@@ -119,18 +119,18 @@ class DataCollection {
     }
   }
 
-  async getOrderByCartId(cartId) {
+  async getItemsByFavId(favId) {
     try {
       let record = null;
-      if (cartId) {
-        record = await this.model.findAll({ where: { cartId } });
+      if (favId) {
+        record = await this.model.findAll({ where: { favId } });
       } 
       return record;
     } catch (error) {
       console.error(
         "can not read the record/s on ",
         this.model.name,
-        ` where id=${cartId}`
+        ` where id=${favId}`
       );
     }
   }

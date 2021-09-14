@@ -100,18 +100,22 @@ socket.on('order', payload=> {
 
     messageBtn.addEventListener('click', e => {
         console.log(message.value)
-        socket.emit('new_message', { message: message.value, type: 'student' })
+        socket.emit('new_message', { message: message.value,username:username.value, type: 'student' })
+        // let listItem = document.createElement('li')
+        //     listItem.textContent = username.value + ': ' +  message.value
+        //     listItem.classList.add('list-group-item')
+        //     messageList.appendChild(listItem)
         message.value = ''
     })
 
     socket.on('receive_message', data => {
-        if (data.type == 'teacher') {
+        // if (data.type == 'teacher') {
             console.log(data)
             let listItem = document.createElement('li')
             listItem.textContent = data.username + ': ' + data.message
             listItem.classList.add('list-group-item')
             messageList.appendChild(listItem)
-        }
+        // }
 
     })
 
@@ -127,7 +131,7 @@ socket.on('order', payload=> {
     socket.on('typing', data => {
         
         info.textContent = data.username + " : "+ data.text
-        // setTimeout(() => { info.textContent = '' }, 5000)
+        setTimeout(() => { info.textContent = '' }, 5000)
     })
 
 

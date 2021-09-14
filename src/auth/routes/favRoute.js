@@ -4,6 +4,7 @@ const express = require('express');
 const dataModules = require('../models');
 const bearerAuth = require('../middleware/bearerAuth');
 
+
 const router = express.Router();
 
 router.param('model', (req, res, next) => {
@@ -34,6 +35,34 @@ async function handleGetAll(req, res) {
   }))
   res.status(200).json({allFood});
 }
+// async function handleGetAll(req, res) {
+
+//   let allRecords = await req.model.get();
+//   let fav = [];
+//   await Promise.all(allRecords.map(async (ele) => {
+//       let favData = [];
+//       let totalPrice = 0;
+//       const favItems = await dataModules.favItems.getItemsByFavId(ele.id);
+//       favItems.forEach(Item => {
+//           favData.push({
+//               foodId: Item.dataValues.foodId,
+//               qty: Item.dataValues.qty,
+//               price: Item.dataValues.price
+              
+//           })
+//           totalPrice += Item.dataValues.qty * Item.dataValues.price
+//       });
+//       fav.push({
+//           id: ele.id,
+//           userId: ele.userId,
+//           status: ele.status,
+//           totalPrice,
+//           favData
+//       })
+//   }))
+
+//   res.status(200).json(fav)
+// }
 
 async function handleGetOne(req, res) {
   const id = req.params.id;
@@ -45,6 +74,11 @@ async function handleGetOne(req, res) {
   ))
   res.status(200).json(allFood);
 }
+// async function handleGetOne(req, res) {
+//   const id = req.params.id;
+//   let allRecords = await dataModules.favItems.getItemsByFavId(id);
+//   res.status(200).json(allRecords);
+// }
 
 
 
@@ -63,6 +97,28 @@ async function handleCreate(req, res) {
   
   res.status(201).json(foodData);
 }
+
+
+// async function handleCreate(req, res) {
+//   const { userId, food } = req.body;
+//   let fav = await req.model.create({ userId });
+//   console.log(dataModules.favItems);
+//   let totalPrice = 0;
+//   await Promise.all(food.map(async ele => {
+//       const obj = {
+//           foodId: ele.foodId,
+//           qty: ele.qty,
+//           price: ele.price,
+//           favId: fav.id
+//       }
+//       await dataModules.favItems.create(obj);
+//       totalPrice += ele.price * ele.qty;
+//   }));
+
+//   let Items = await dataModules.favItems.getItemsByFavId(fav.id);
+//   res.status(201).json({ userId, favId: fav.id, totalPrice, Items: Items });
+// }
+
 
 async function handleUpdate(req, res) {
   const id = req.params.id;
