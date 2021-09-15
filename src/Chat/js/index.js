@@ -1,18 +1,22 @@
 "use strict";
 
-const http = require("http").createServer();
+// const http = require("http").createServer();
 const uuid = require("uuid").v4;
 
-const io = require("socket.io")(http, {
-  cors: { origin: "*" },
-});
+// const io = require("socket.io")(http, {
+//   cors: { origin: "*" },
+// });
+const { io:FOOD } = require("../../server");
+
+
+
 
 const msgQueue = {
   orders: {},
 };
- let port = process.env.PORT||8080
-http.listen(port, () => console.log(`listening on http://localhost:${port}`));
-const FOOD = io.of("/food");
+//  let port = process.env.PORT||3000
+// http.listen(port, () => console.log(`listening on http://localhost:${port}`));
+// const FOOD = io.of("/food");
 ////////////////////////////////
 
 ////////////////////////////////

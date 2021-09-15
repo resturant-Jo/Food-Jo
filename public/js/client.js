@@ -1,6 +1,7 @@
-'use strict'
-
-const socket = io('ws://localhost:8080/food');
+(function connect() {
+// const socket = io('ws://localhost:8080/food');
+// const { io:socket } = require("../../server");
+const socket = io();
 
 // const id = Math.floor(Math.random() * 2515412154202)
 const card1=document.getElementById("card1");
@@ -99,7 +100,7 @@ const obj ={
     alert('Your Order Have Been Reserved')
 }
 //////////////////////////////////////////////////
-(function connect() {
+// (function connect() {
   
 
   let username = document.querySelector('#username')
@@ -135,29 +136,30 @@ const obj ={
           messageList.appendChild(listItem);
           
           
-          socket.broadcast.to('ID').on( 'receive_message', {somedata : somedata_server} );
+        //   socket.broadcast.to('ID').on( 'receive_message', {somedata : somedata_server} );
 
   })
 
 
 
 
-  let info = document.querySelector('.info')
+//   let info = document.querySelector('.info')
 
-  message.addEventListener('keypress', e => {
-      socket.emit('typing', { text: message.value })
-  })
+//   message.addEventListener('keypress', e => {
+//       socket.emit('typing', { text: message.value })
+//   })
 
-  socket.on('typing', data => {
-      info.textContent = data.username + " : " + data.text
+//   socket.on('typing', data => {
+//       info.textContent = data.username + " : " + data.text
       
-      setTimeout(() => { info.textContent = '' }, 5000)
-  })
+//       setTimeout(() => { info.textContent = '' }, 5000)
+//   })
 
 
 
-  socket.on('typing', data => {
-      socket.broadcast.emit('typing', { username: socket.username })
-  })
+//   socket.on('typing', data => {
+//       socket.broadcast.emit('typing', { username: socket.username })
+//   })
 
 })()
+

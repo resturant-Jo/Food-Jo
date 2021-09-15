@@ -17,7 +17,7 @@ const logger = require('./auth/middleware/logger');
 
 // Prepare the express app
 const app = express();
-
+const router = express.Router();
 // App Level MW
 app.use(cors());
 app.use(morgan('dev'));
@@ -25,30 +25,55 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// ---------------------------
+const socket_io = require("socket.io");
+
+var http = require('http').Server(app);
+var socketio = require('socket.io');
+const { Server } = require('http');
+
+app.set('view engine', 'ejs')
+app.use(express.static("public"));
+// ----------------------------------
 app.use(logger);
+
+app.get('/hi', function (req, res) {
+  res.send('about')
+});
+
+app.get('/client',(req,res)=>{
+  res.sendFile(__dirname + "/Chat/index.html");
+  
+})
+
+app.get('/drever',(req,res)=>{
+  res.sendFile(__dirname + "/Chat/drever.html");
+})
+
 
 // Routes
 app.use(authRoutes);
 app.use('/v1',favRoutes);
 app.use('/v2',cartRoutes);
 app.use('/v3',orderRoutes);
-app.use(foodRoutes);
+app.use('/v4',foodRoutes);
 
-
-
-app.get('/',(req,res)=>{
-  res.send('This is the home page for API');
-})
 
 // Catchalls
 app.use('*',notFound);
 app.use(errorHandler);
 
+const port = process.env.PORT || 3000;
+
+const server = app.listen(port, () => {
+  console.log(`server is running ${port}`)
+
+})
+const io = socketio(server)
+
 module.exports = {
+  io: io,
   server: app,
-  start: (port) => {
-    app.listen(port, () => {
-      console.log(`Server Up on ${port}`);
-    });
-  },
+ 
+  
 };
