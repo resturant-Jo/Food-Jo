@@ -1,7 +1,9 @@
-'use strict';
+(function connect() {
 
 
-const socket = io('ws://localhost:8080/food');
+const socket = io();
+
+// const {io:socket} = require('../../src/server')
 
 // pulling msgs 
 socket.emit('get_all');
@@ -79,7 +81,7 @@ socket.on('order', payload=> {
   }
   })
   //////////////////////////
-  // (function connect() {
+  
   //   let socket = io.connect()
 
     let username = document.querySelector('#username')
@@ -128,16 +130,16 @@ socket.on('order', payload=> {
         socket.emit('typing', { text: message.value })
     })
 
-    socket.on('typing', data => {
+    // socket.on('typing', data => {
         
-        info.textContent = data.username + " : "+ data.text
-        setTimeout(() => { info.textContent = '' }, 5000)
-    })
+    //     info.textContent = data.username + " : "+ data.text
+    //     setTimeout(() => { info.textContent = '' }, 5000)
+    // })
 
 
 
-    socket.on('typing', data => {
-        socket.broadcast.emit('typing', { username: socket.username })
-    })
+    // socket.on('typing', data => {
+    //     socket.broadcast.emit('typing', { username: socket.username })
+    // })
 
-// })()
+})()
