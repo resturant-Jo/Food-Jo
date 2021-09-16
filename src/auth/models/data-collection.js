@@ -7,11 +7,13 @@ class DataCollection {
 
   async get(id) {
     try {
+      let record = null;
       if (id) {
-        return await this.model.findOne({ id });
+        record = await this.model.findAll({ where: { id: id } });
       } else {
-        return await this.model.findAll({});
+        record = await this.model.findAll();
       }
+      return record;
     } catch (error) {
       console.error(
         "can not read the record/s on ",
@@ -52,6 +54,105 @@ class DataCollection {
       );
     }
   }
+  async deleteByCartId(cartId) {
+    if (!id) {
+      throw new Error("no id provided !, for model ", this.model.name);
+    }
+    try {
+      let deletedRecord = await this.model.destroy({ where: { cartId } });
+      return deletedRecord;
+    } catch (error) {
+      console.error(
+        " can not delete the record on ",
+        this.model.name,
+        ` where is id=${cartId}`
+      );
+    }
+  }
+
+  async getfav(id) {
+    try {
+      let record = null;
+      if (id) {
+        record = await this.model.findOne({ where: { id } });
+      } 
+      return record;
+    } catch (error) {
+      console.error(
+        "can not read the record/s on ",
+        this.model.name,
+        ` where id=${id}`
+      );
+    }
+  }
+
+ 
+
+  async getCartByUserId(userId) {
+    try {
+      let record = null;
+      if (userId) {
+        record = await this.model.findAll({ where: { userId } });
+      } 
+      return record;
+    } catch (error) {
+      console.error(
+        "can not read the record/s on ",
+        this.model.name,
+        ` where id=${userId}`
+      );
+    }
+  }
+  async getItemsByCartId(cartId) {
+    try {
+      let record = null;
+      if (cartId) {
+        record = await this.model.findAll({ where: { cartId } });
+      } 
+      return record;
+    } catch (error) {
+      console.error(
+        "can not read the record/s on ",
+        this.model.name,
+        ` where id=${cartId}`
+      );
+    }
+  }
+
+  async getItemsByFavId(favId) {
+    try {
+      let record = null;
+      if (favId) {
+        record = await this.model.findAll({ where: { favId } });
+      } 
+      return record;
+    } catch (error) {
+      console.error(
+        "can not read the record/s on ",
+        this.model.name,
+        ` where id=${favId}`
+      );
+    }
+  }
+
+  async getcart(id) {
+    try {
+      let record = null;
+      if (id) {
+        record = await this.model.findAll({ where: { id } });
+      } 
+      return record;
+    } catch (error) {
+      console.error(
+        "can not read the record/s on ",
+        this.model.name,
+        ` where id=${id}`
+      );
+    }
+  }
+
+  
+
 }
 
 module.exports = DataCollection;
