@@ -37,8 +37,8 @@ app.use(express.static("public"));
 // ----------------------------------
 app.use(logger);
 
-app.get('/hi', function (req, res) {
-  res.send('about')
+app.get('/', function (req, res) {
+  res.send('This Is The Home For Api 🍕🍦🍗🍛🍔')
 });
 
 app.get('/client',(req,res)=>{
@@ -46,8 +46,8 @@ app.get('/client',(req,res)=>{
   
 })
 
-app.get('/drever',(req,res)=>{
-  res.sendFile(__dirname + "/Chat/drever.html");
+app.get('/driver',(req,res)=>{
+  res.sendFile(__dirname + "/Chat/driver.html");
 })
 
 
