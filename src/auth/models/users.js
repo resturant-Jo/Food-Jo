@@ -11,19 +11,20 @@ const userModel = (sequelize, DataTypes) => {
     firstname: { type: DataTypes.STRING, required: true, allowNull: false },
     lastname: { type: DataTypes.STRING, required: true, allowNull: false },
     email: { type: DataTypes.STRING, unique: true, allowNull: false, validate: { isEmail: true } },
-    gender: { type: DataTypes.ENUM('male', 'female'), required: true },
-    age: { type: DataTypes.INTEGER, required: true, allowNull: false },
-    adress: { type: DataTypes.STRING, required: true, allowNull: false },
+    gender: { type: DataTypes.ENUM('male', 'female'), required: false },
+    age: { type: DataTypes.INTEGER, required: false, allowNull: false },
+    adress: { type: DataTypes.STRING, required: false, allowNull: false },
     profilePicture: {
       type: DataTypes.STRING,
       defaultValue:
         "https://spng.pngfind.com/pngs/s/39-398349_computer-icons-user-profile-facebook-instagram-instagram-profile.png",
+        required: false
     },
-    phone: { type: DataTypes.INTEGER, required: true },
+    phone: { type: DataTypes.INTEGER, required: false },
     password: { type: DataTypes.STRING, required: true, allowNull: false },
 
-    role: { type: DataTypes.ENUM('user', 'manager', 'driver', 'admin'), required: true, defaultValue: 'user' },
-    token: {
+    role: { type: DataTypes.ENUM('user', 'driver', 'admin'), required: true, defaultValue: 'user' },
+     token: {
       type: DataTypes.VIRTUAL,
       get() {
         return jwt.sign(
@@ -42,7 +43,7 @@ const userModel = (sequelize, DataTypes) => {
         const acl = {
           user: ['read'],
           driver: ['read'],
-          manager: ['read', 'create','update'],
+          // manager: ['read', 'create','update'],
           admin: ['read', 'create', 'update', 'delete']
         };
         return acl[this.role];
