@@ -36,7 +36,7 @@ class DataCollection {
       let currentRecord = await this.model.findOne({ where: { id } });
       let updatedRecord = await currentRecord.update(data);
       return updatedRecord;
-    } catch (error) {}
+    } catch (error) { }
   }
 
   async delete(id) {
@@ -55,7 +55,7 @@ class DataCollection {
     }
   }
   async deleteByCartId(cartId) {
-    if (!id) {
+    if (!cartId) {
       throw new Error("no id provided !, for model ", this.model.name);
     }
     try {
@@ -75,7 +75,7 @@ class DataCollection {
       let record = null;
       if (id) {
         record = await this.model.findOne({ where: { id } });
-      } 
+      }
       return record;
     } catch (error) {
       console.error(
@@ -86,14 +86,14 @@ class DataCollection {
     }
   }
 
- 
 
-  async getCartByUserId(userId) {
+
+  async getActiveCartByUserId(userId) {
     try {
       let record = null;
       if (userId) {
-        record = await this.model.findAll({ where: { userId } });
-      } 
+        record = await this.model.findOne({ where: { userId, status: true } });
+      }
       return record;
     } catch (error) {
       console.error(
@@ -108,7 +108,7 @@ class DataCollection {
       let record = null;
       if (cartId) {
         record = await this.model.findAll({ where: { cartId } });
-      } 
+      }
       return record;
     } catch (error) {
       console.error(
@@ -124,7 +124,7 @@ class DataCollection {
       let record = null;
       if (favId) {
         record = await this.model.findAll({ where: { favId } });
-      } 
+      }
       return record;
     } catch (error) {
       console.error(
@@ -140,7 +140,7 @@ class DataCollection {
       let record = null;
       if (id) {
         record = await this.model.findAll({ where: { id } });
-      } 
+      }
       return record;
     } catch (error) {
       console.error(
@@ -151,7 +151,7 @@ class DataCollection {
     }
   }
 
-  
+
 
 }
 

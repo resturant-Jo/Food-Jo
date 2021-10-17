@@ -19,6 +19,7 @@ router.param('model', (req, res, next) => {
 router.get('/:model', bearerAuth, handleGetAll);
 router.get('/:model/:id', bearerAuth, handleGetOne);
 router.get('/:model/items/:id', bearerAuth, handleGetCartItemsById);
+router.get('/:model/userId/:id', bearerAuth, handleGetCartByUserId);
 router.post('/:model', bearerAuth, handleCreate);
 router.put('/:model/:id', bearerAuth, handleUpdate);
 router.delete('/:model/:id', bearerAuth, handleDelete);
@@ -63,7 +64,14 @@ async function handleGetOne(req, res) {
 
 async function handleGetCartItemsById(req, res) {
     const id = req.params.id;
+    console.log("handleGetCartItemsById");
     let allRecords = await dataModules.cartItems.getItemsByCartId(id);
+    res.status(200).json(allRecords);
+}
+
+async function handleGetCartByUserId(req, res) {
+    const id = req.params.id;
+    let allRecords = await dataModules.cart.getActiveCartByUserId(id);
     res.status(200).json(allRecords);
 }
 
@@ -91,9 +99,23 @@ async function handleCreate(req, res) {
 
 async function handleUpdate(req, res) {
     const id = req.params.id;
-    const obj = req.body;
-    let updatedRecord = await req.model.update(id, obj)
-    res.status(200).json(updatedRecord);
+    const { userId, food } = req.body;
+    await req.model.update(id, {userId})
+    await dataModules.cartItems.deleteByCartId(id);
+    let totalPrice = 0;
+    await Promise.all(food.map(async ele => {
+        const obj = {
+            foodId: ele.foodId,
+            qty: ele.qty,
+            price: ele.price,
+            cartId: id
+        }
+        await dataModules.cartItems.create(obj);
+        totalPrice += ele.price * ele.qty;
+    }));
+    let Items = await dataModules.cartItems.getItemsByCartId(id);
+    res.status(200).json({ userId, cartId: id, totalPrice, Items: Items });
+
 }
 
 async function handleDelete(req, res) {
