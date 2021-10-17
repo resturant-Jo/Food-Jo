@@ -39,9 +39,17 @@ authRouter.get('/users', bearerAuth, permissions('delete'), async (req, res, nex
 authRouter.delete('/deleteAccount', bearerAuth, async (req, res, next) => {
     const id = req.userId
   
-    await users.destroy({ where: { id: id } })
+     await users.destroy({ where: { id: id } })
     
     res.send('Account Deleted');
+  
+  });
+authRouter.get('/profile', bearerAuth, async (req, res, next) => {
+    const id = req.userId
+  
+   const userRecords= await users.findOne({ where: { id: id } })
+    
+    res.status(200).json(userRecords);
   
   });
 
