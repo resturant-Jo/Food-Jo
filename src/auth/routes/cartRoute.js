@@ -19,6 +19,7 @@ router.param('model', (req, res, next) => {
 router.get('/:model', bearerAuth, handleGetAll);
 router.get('/:model/:id', bearerAuth, handleGetOne);
 router.get('/:model/items/:id', bearerAuth, handleGetCartItemsById);
+router.delete('/:model/items/:id', bearerAuth, handleDeleteFoodById);
 router.get('/:model/userId/:id', bearerAuth, handleGetCartByUserId);
 router.post('/:model', bearerAuth, handleCreate);
 router.put('/:model/:id', bearerAuth, handleUpdate);
@@ -32,24 +33,32 @@ async function handleGetAll(req, res) {
         let cartData = [];
         let totalPrice = 0;
         const cartItems = await dataModules.cartItems.getItemsByCartId(ele.id);
-        cartItems.forEach(Item => {
+        const userInfo = await dataModules.user.getfav(ele.id);
+        // console.log(userInfo);
+        for (const Item of cartItems) {
+            const foodData = await dataModules.food.getFoodById(Item.dataValues.foodId);
             cartData.push({
                 foodId: Item.dataValues.foodId,
+                name: foodData.name,
+                image: foodData.image,
+                description: foodData.description,
+                restuarantId: foodData.restuarantId,
                 qty: Item.dataValues.qty,
                 price: Item.dataValues.price
-                
-            })
+
+            });
             totalPrice += Item.dataValues.qty * Item.dataValues.price
-        });
+        };
         cart.push({
             id: ele.id,
             userId: ele.userId,
+            username:userInfo.username,
+            profilePicture:userInfo.profilePicture,
             status: ele.status,
             totalPrice,
-            cartData
-        })
-    }))
-
+            cartData,
+        });
+    }));
     res.status(200).json(cart)
 }
 
@@ -66,12 +75,16 @@ async function handleGetCartItemsById(req, res) {
     const id = req.params.id;
     console.log("handleGetCartItemsById");
     let allRecords = await dataModules.cartItems.getItemsByCartId(id);
+    await Promise.all(allRecords.map(async (ele)=>{
+        const selectedFood= await dataModules.food.getFoodById(ele.id)
+            }))
     res.status(200).json(allRecords);
 }
 
 async function handleGetCartByUserId(req, res) {
     const id = req.params.id;
     let allRecords = await dataModules.cart.getActiveCartByUserId(id);
+
     res.status(200).json(allRecords);
 }
 
@@ -100,7 +113,7 @@ async function handleCreate(req, res) {
 async function handleUpdate(req, res) {
     const id = req.params.id;
     const { userId, food } = req.body;
-    await req.model.update(id, {userId})
+    await req.model.update(id, { userId })
     await dataModules.cartItems.deleteByCartId(id);
     let totalPrice = 0;
     await Promise.all(food.map(async ele => {
@@ -121,6 +134,11 @@ async function handleUpdate(req, res) {
 async function handleDelete(req, res) {
     let id = req.params.id;
     let deletedRecord = await req.model.delete(id);
+    res.status(200).json(deletedRecord);
+}
+async function handleDeleteFoodById(req, res) {
+    let id = req.params.id;
+    let deletedRecord = await dataModules.cartItems.deleteByFoodId(id);
     res.status(200).json(deletedRecord);
 }
 

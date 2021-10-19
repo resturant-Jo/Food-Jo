@@ -69,6 +69,21 @@ class DataCollection {
       );
     }
   }
+  async deleteByFoodId(foodId) {
+    if (!foodId) {
+      throw new Error("no id provided !, for model ", this.model.name);
+    }
+    try {
+      let deletedRecord = await this.model.destroy({ where: { foodId } });
+      return deletedRecord;
+    } catch (error) {
+      console.error(
+        " can not delete the record on ",
+        this.model.name,
+        ` where is id=${foodId}`
+      );
+    }
+  }
 
   async getfav(id) {
     try {
@@ -103,6 +118,21 @@ class DataCollection {
       );
     }
   }
+  async getCartByUserId(userId) {
+    try {
+      let record = null;
+      if (userId) {
+        record = await this.model.findAll({ where: { userId } });
+      }
+      return record;
+    } catch (error) {
+      console.error(
+        "can not read the record/s on ",
+        this.model.name,
+        ` where id=${userId}`
+      );
+    }
+  }
   async getItemsByCartId(cartId) {
     try {
       let record = null;
@@ -115,6 +145,22 @@ class DataCollection {
         "can not read the record/s on ",
         this.model.name,
         ` where id=${cartId}`
+      );
+    }
+  }
+
+  async getFoodById(id) {
+    try {
+      let record = null;
+      if (id) {
+        record = await this.model.findOne({ where: { id } });
+      }
+      return record;
+    } catch (error) {
+      console.error(
+        "can not read the record/s on ",
+        this.model.name,
+        ` where id=${id}`
       );
     }
   }
