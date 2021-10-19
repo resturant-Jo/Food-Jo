@@ -22,6 +22,23 @@ class DataCollection {
       );
     }
   }
+  async getByUserId(userId) {
+    try {
+      let record = null;
+      if (userId) {
+        record = await this.model.findAll({ where: {  userId } });
+      } else {
+        record = await this.model.findAll();
+      }
+      return record;
+    } catch (error) {
+      console.error(
+        "can not read the record/s on ",
+        this.model.name,
+        ` where id=${userId}`
+      );
+    }
+  }
 
   async create(record) {
     try {

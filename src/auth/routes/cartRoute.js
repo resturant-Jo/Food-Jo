@@ -17,7 +17,7 @@ router.param('model', (req, res, next) => {
 });
 
 router.get('/:model', bearerAuth, handleGetAll);
-router.get('/:model/:id', bearerAuth, handleGetOne);
+router.get('/:model/:id', bearerAuth, handleGetOneCartByUserId);
 router.get('/:model/items/:id', bearerAuth, handleGetCartItemsById);
 router.delete('/:model/items/:id', bearerAuth, handleDeleteFoodById);
 router.get('/:model/userId/:id', bearerAuth, handleGetCartByUserId);
@@ -63,12 +63,41 @@ async function handleGetAll(req, res) {
 }
 
 
-async function handleGetOne(req, res) {
+async function handleGetOneCartByUserId(req, res) {
     const id = req.params.id;
-    let allRecords = await req.model.get(id);
-    console.log(dataModules.cart);
+    let allRecords = await req.model.getByUserId(id);
+    let cart = [];
+    await Promise.all(allRecords.map(async (ele) => {
+        let cartData = [];
+        let totalPrice = 0;
+        const cartItems = await dataModules.cartItems.getItemsByCartId(ele.id);
+        const userInfo = await dataModules.user.getfav(ele.id);
+        // console.log(userInfo);
+        for (const Item of cartItems) {
+            const foodData = await dataModules.food.getFoodById(Item.dataValues.foodId);
+            cartData.push({
+                foodId: Item.dataValues.foodId,
+                name: foodData.name,
+                image: foodData.image,
+                description: foodData.description,
+                restuarantId: foodData.restuarantId,
+                qty: Item.dataValues.qty,
+                price: Item.dataValues.price
 
-    res.status(200).json(allRecords);
+            });
+            totalPrice += Item.dataValues.qty * Item.dataValues.price
+        };
+        cart.push({
+            id: ele.id,
+            userId: ele.userId,
+            username:userInfo.username,
+            profilePicture:userInfo.profilePicture,
+            status: ele.status,
+            totalPrice,
+            cartData,
+        });
+    }));
+    res.status(200).json(cart)
 }
 
 async function handleGetCartItemsById(req, res) {
