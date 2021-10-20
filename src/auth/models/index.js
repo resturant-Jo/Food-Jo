@@ -9,6 +9,7 @@ const userModel = require('./users');
 const favModel = require('./favFood/favFood');
 const orderModel = require('./order/order');
 const restuarantModel = require('./restuarant/restuarant');
+const adminModel = require('./admin/admin');
 
 const Collection = require('./data-collection.js');
 
@@ -32,6 +33,7 @@ const cart = cartModel(sequelize, DataTypes);
 const cartItems = cartItemsModel(sequelize, DataTypes);
 const fav = favModel(sequelize, DataTypes);
 const order = orderModel(sequelize, DataTypes);
+const admin = adminModel(sequelize, DataTypes);
 
 // ------------------- RESTUARANT ----------------
 
@@ -63,6 +65,9 @@ order.belongsTo(cart, { foreignKey: "cartId", targetKey: "id" });
 cartItems.belongsTo(cart, { foreignKey: "cartId", targetKey: "id" });
 
 // -------------------- END CART -----------------
+user.hasMany(admin, { foreignKey: "userId", sourceKey: "id" });
+admin.belongsTo(user, { foreignKey: "userId", targetKey: "id" });
+// ----------------- ADMIN ------------------
 
 
 
@@ -80,4 +85,5 @@ module.exports = {
   cartItems: new Collection(cartItems),
   order: new Collection(order),
   users: userModel(sequelize, DataTypes),
+  admin: new Collection(admin),
 };

@@ -13,6 +13,7 @@ const cartRoutes=require('./auth/routes/cartRoute');
 const errorHandler = require('./error-handlers/500.js');
 const notFound = require('./error-handlers/404.js');
 const authRoutes = require('./auth/routes/routes');
+const uploadImages = require('./auth/routes/uploadImages');
 const logger = require('./auth/middleware/logger');
 
 // Prepare the express app
@@ -53,11 +54,16 @@ app.get('/driver',(req,res)=>{
 
 // Routes
 app.use(authRoutes);
+app.use(uploadImages);
 app.use('/v1',favRoutes);
 app.use('/v2',cartRoutes);
 app.use('/v3',orderRoutes);
 app.use('/v4',foodRoutes);
 
+// make the uploads folder is static (accessble)
+app.use("/uploads", express.static("uploads"));
+app.use("/images", express.static("images"));
+app.use("/userImges", express.static("userImges"));
 
 // Catchalls
 app.use('*',notFound);

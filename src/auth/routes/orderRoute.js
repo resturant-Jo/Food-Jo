@@ -30,18 +30,27 @@ await Promise.all(allRecords.map(async(ele)=>{
     let orderData=[];
     let totalPrice=0;
     const orderItems=await dataModules.cartItems.getItemsByCartId(ele.id);
-    orderItems.forEach(Item=>{
+    const userInfo = await dataModules.user.getfav(ele.id);
+    // console.log(userInfo);
+    for (const Item of orderItems) {
+      const foodData = await dataModules.food.getFoodById(Item.dataValues.foodId);
+      // console.log(foodData);
       orderData.push({
-        foodId: Item.dataValues.foodId,
-        qty: Item.dataValues.qty,
-        price: Item.dataValues.price
-                
-      })
-      totalPrice += Item.dataValues.qty * Item.dataValues.price
+          foodId: Item.dataValues.foodId,
+          name: foodData.name,
+          image: foodData.image,
+          description: foodData.description,
+          restuarantId: foodData.restuarantId,
+          qty: Item.dataValues.qty,
+          price: Item.dataValues.price
 
-    });
+      });
+      totalPrice += Item.dataValues.qty * Item.dataValues.price
+  };
     order.push({
-      cartId: ele.userId,
+      cartId: ele.id,
+      userId:userInfo.id,
+      username:userInfo.username,
       totalPrice,
       orderData
     })
