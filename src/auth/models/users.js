@@ -11,13 +11,13 @@ const userModel = (sequelize, DataTypes) => {
     firstname: { type: DataTypes.STRING, required: true, allowNull: false },
     lastname: { type: DataTypes.STRING, required: true, allowNull: false },
     email: { type: DataTypes.STRING, unique: true, allowNull: false, validate: { isEmail: true } },
-    gender: { type: DataTypes.ENUM('male', 'female'), required: false },
-    age: { type: DataTypes.INTEGER, required: false, allowNull: false },
-    adress: { type: DataTypes.STRING, required: false, allowNull: false },
+    gender: { type: DataTypes.ENUM('male', 'female'), required: false ,defaultValue:'male'},
+    age: { type: DataTypes.INTEGER, required: false, allowNull: false ,defaultValue: 0},
+    adress: { type: DataTypes.STRING, required: false, allowNull: false ,defaultValue: '' },
     profilePicture: {
       type: DataTypes.STRING,
       defaultValue:
-        "https://spng.pngfind.com/pngs/s/39-398349_computer-icons-user-profile-facebook-instagram-instagram-profile.png",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQKpiFXNibuHIcJpUpot_YgS55ywsPHhSiEA&usqp=CAU",
         required: false
     },
     phone: { type: DataTypes.INTEGER, required: false },
@@ -28,7 +28,7 @@ const userModel = (sequelize, DataTypes) => {
       type: DataTypes.VIRTUAL,
       get() {
         return jwt.sign(
-          { username: this.username, capabilities: this.capabilities,userId:this.id },
+          { username: this.username, capabilities: this.capabilities,userId:this.id,role:this.role },
           SECRET
         );
       },
@@ -41,8 +41,8 @@ const userModel = (sequelize, DataTypes) => {
       type: DataTypes.VIRTUAL,
       get() {
         const acl = {
-          user: ['read'],
-          driver: ['read'],
+          user: ['read','user'],
+          driver: ['read','driver'],
           // manager: ['read', 'create','update'],
           admin: ['read', 'create', 'update', 'delete']
         };

@@ -4,7 +4,8 @@
 const express = require('express');
 const authRouter = express.Router();
 
-const { users,admin } = require('../models/index');
+const { users,  adminCollection,
+  adminModel, } = require('../models/index');
 // const admin = require('../models/index')
 const basicAuth = require('../middleware/basicAuth');
 const bearerAuth = require('../middleware/bearerAuth');
@@ -39,9 +40,14 @@ authRouter.get('/users', bearerAuth, permissions('delete'), async (req, res, nex
 
 authRouter.get('/adminData', bearerAuth, permissions('delete'), async (req, res, next) => {
   let id =req.userId
-  let data = await admin.get(id);
+  let data = await adminCollection.get(id);
   res.send(data);
 
+});
+authRouter.get("/support", bearerAuth, permissions("delete"), async (req, res, next) => {
+  const userRecords = await adminCollection.get();
+  const list = userRecords.map((user) => user);
+  res.status(200).json(list);
 });
 
 authRouter.get('/adminPersonal', bearerAuth, async (req, res, next) => {
@@ -51,18 +57,18 @@ authRouter.get('/adminPersonal', bearerAuth, async (req, res, next) => {
 
 });
 
-authRouter.get('/support', async (req, res, next) => {
+authRouter.post('/support', async (req, res, next) => {
   let update = req.body;
-  let data = await adminModel.findAll();
-  console.log(data);
-  data.map(async (el) => {
+  let data = await adminModel.findAll({});
+  console.log('Data >>>>>>>>> ',data);
+ await Promise.all( data.map(async (el) => {
     console.log("eleleleelelel>>>>", el);
     let id = el.dataValues.id;
     let item = el.dataValues.support;
     let newArray = [...item, update];
     let admin = await adminCollection.update(id, { support: newArray });
     res.send(admin);
-  });
+  }));
 
 });
 

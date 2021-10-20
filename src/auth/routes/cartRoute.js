@@ -33,10 +33,11 @@ async function handleGetAll(req, res) {
         let cartData = [];
         let totalPrice = 0;
         const cartItems = await dataModules.cartItems.getItemsByCartId(ele.id);
-        const userInfo = await dataModules.user.getfav(ele.id);
-        // console.log(userInfo);
+        const userInfo = await dataModules.user.getfav(ele.userId);
+        console.log(userInfo);
         for (const Item of cartItems) {
             const foodData = await dataModules.food.getFoodById(Item.dataValues.foodId);
+            // console.log(foodData);
             cartData.push({
                 foodId: Item.dataValues.foodId,
                 name: foodData.name,
